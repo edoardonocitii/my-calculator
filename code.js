@@ -15,6 +15,7 @@ function buttonClick(value) {
 }
 
 function handleSymbol(symbol) {
+    console.log(symbol)
     switch (symbol) {
         case 'C':
             buffer = "0";
