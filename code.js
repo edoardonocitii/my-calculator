@@ -1,6 +1,7 @@
 let runningTotal = 0;
 let buffer = "0";
 let previousOperator;
+let waitingForSecondNumber = false;
 
 const screen = document.querySelector(".screen");
 
@@ -19,6 +20,7 @@ function handleSymbol(symbol) {
             buffer = "0";
             runningTotal = 0;
             previousOperator = null;
+            waitingForSecondNumber = false;
             break;
 
         case '=':
@@ -27,6 +29,7 @@ function handleSymbol(symbol) {
             previousOperator = null;
             buffer = runningTotal.toString();
             runningTotal = 0;
+            waitingForSecondNumber = false;
             break;
 
         case '←':
@@ -43,8 +46,6 @@ function handleSymbol(symbol) {
 }
 
 function handleMath(symbol) {
-    if (buffer === "0") return;
-
     const floatBuffer = parseFloat(buffer);
 
     if (runningTotal === 0) {
@@ -54,7 +55,7 @@ function handleMath(symbol) {
     }
 
     previousOperator = symbol;
-    buffer = "0";
+    waitingForSecondNumber = true;
 }
 
 function flushOperation(number) {
@@ -67,9 +68,6 @@ function flushOperation(number) {
     } else if (previousOperator === '÷') {
         if (number === 0) {
             alert("Cannot divide by 0");
-            runningTotal = 0;
-            buffer = "0";
-            previousOperator = null;
             return;
         }
         runningTotal /= number;
@@ -77,7 +75,12 @@ function flushOperation(number) {
 }
 
 function handleNumber(numberString) {
-    buffer = buffer === "0" ? numberString : buffer + numberString;
+    if (waitingForSecondNumber) {
+        buffer = numberString;
+        waitingForSecondNumber = false;
+    } else {
+        buffer = buffer === "0" ? numberString : buffer + numberString;
+    }
 }
 
 function init() {
