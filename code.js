@@ -86,10 +86,13 @@ function handleNumber(numberString) {
 function init() {
     document.querySelector('.calc-buttons')
         .addEventListener("click", function (event) {
-            if (event.target.tagName === 'BUTTON') {
-                buttonClick(event.target.innerText.trim());
+            // This ensures we ALWAYS catch the button, even if you click the edge
+            const button = event.target.closest('button');
+            if (button) {
+                buttonClick(button.innerText.trim());
             }
         });
 }
+
 
 init();
